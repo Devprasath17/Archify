@@ -74,7 +74,7 @@ export default function Home() {
                                   <h3> Project Manhattan</h3>
                                   <div className="meta">
                                       <Clock size = {12}/>
-                                      <span>{new Date('14.12.2005').toLocaleDateString()}</span>
+                                      <span>{new Date('14.12.2027').toLocaleDateString()}</span>
                                       <span> By Archify</span>
                                   </div>
                               </div>
