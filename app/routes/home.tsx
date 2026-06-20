@@ -3,6 +3,8 @@ import { Welcome } from "../welcome/welcome";
 import Navbar from "../../components/Navbar";
 import Button from "../../components/ui/Button"
 import {ArrowRight, Layers, Clock, ArrowUpRight} from "lucide-react"
+import Upload from "../../components/Upload";
+import {useNavigate} from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -12,6 +14,12 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
+    const navigate = useNavigate();
+    const handleUploadComplete = async  (base64Image : string)=>{
+        const newId = Date.now().toString();
+        navigate(`/visualizer/${newId}`);
+        return true;
+    }
   return(
       <div className = "home">
         <Navbar/>
@@ -45,7 +53,7 @@ export default function Home() {
                           <h3>Upload your floor plan</h3>
                           <p>Supports JPG, PNG, formats upto 10MB</p>
                       </div>
-                      <p> Upload Images</p>
+                      <Upload onComplete={handleUploadComplete}/>
                   </div>
 
               </div>
@@ -74,7 +82,7 @@ export default function Home() {
                                   <h3> Project Manhattan</h3>
                                   <div className="meta">
                                       <Clock size = {12}/>
-                                      <span>{new Date('14.12.2027').toLocaleDateString()}</span>
+                                      <span>{new Date('01.01.2027').toLocaleDateString()}</span>
                                       <span> By Archify</span>
                                   </div>
                               </div>
