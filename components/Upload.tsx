@@ -2,7 +2,7 @@ import React,{useCallback,useEffect,useRef,useState} from "react"
 import {useOutletContext} from "react-router";
 import {CheckCircle2, ImageIcon, UploadIcon} from "lucide-react";
 import {PROGRESS_INCREMENT, PROGRESS_INTERVAL_MS, REDIRECT_DELAY_MS} from "../lib/constants";
-import {clearInterval, clearTimeout} from "node:timers";
+
 
 
 interface UploadProps{
@@ -13,8 +13,8 @@ const Upload = ({onComplete}:UploadProps) => {
     const [file,setFile] = useState<File|null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [progress , setProgress] = useState(0);
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
-    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const {isSignedIn} = useOutletContext<AuthContext>();
     useEffect(()=>{
