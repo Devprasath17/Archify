@@ -30,21 +30,14 @@ export const createProject = async ({ item, visibility = "private" }: CreateProj
     const hostedRender = projectId && item.renderedImage ?
         await uploadImageToHosting({ hosting, url: item.renderedImage, projectId, label: 'rendered', }) : null;
 
-    const resolvedSource = hostedSource?.url || (isHostedUrl(item.sourceImage)
-            ? item.sourceImage
-            : ''
-    );
+    const resolvedSource = hostedSource?.url || item.sourceImage || '';
 
     if(!resolvedSource) {
-        console.warn('Failed to host source image, skipping save.')
+        console.warn('No source image available, skipping save.')
         return null;
     }
 
-    const resolvedRender = hostedRender?.url
-        ? hostedRender?.url
-        : item.renderedImage && isHostedUrl(item.renderedImage)
-            ? item.renderedImage
-            : undefined;
+    const resolvedRender = hostedRender?.url || item.renderedImage || undefined;
 
     const {
         sourcePath: _sourcePath,

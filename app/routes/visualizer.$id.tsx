@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext, useParams} from "react-router";
+import { useNavigate, useLocation, useOutletContext, useParams} from "react-router";
 import {useEffect, useRef, useState} from "react";
 import {generate3DView} from "../../lib/ai.action";
 import {Box, Download, RefreshCcw, Share2, X} from "lucide-react";
@@ -9,6 +9,8 @@ import {ReactCompareSlider, ReactCompareSliderImage} from "react-compare-slider"
 const VisualizerId = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationState = location.state as VisualizerLocationState | undefined;
   const { userId } = useOutletContext<AuthContext>()
 
   const hasInitialGenerated = useRef(false);
@@ -75,9 +77,19 @@ const VisualizerId = () => {
 
       setIsProjectLoading(true);
 
-      const fetchedProject = await getProjectById({ id });
+      let fetchedProject = await getProjectById({ id });
 
       if (!isMounted) return;
+
+      if (!fetchedProject && locationState?.initialImage) {
+        fetchedProject = {
+          id,
+          name: locationState.name || `Residence ${id}`,
+          sourceImage: locationState.initialImage,
+          renderedImage: locationState.initialRendered || null,
+          timestamp: Date.now(),
+        };
+      }
 
       setProject(fetchedProject);
       setCurrentImage(fetchedProject?.renderedImage || null);
@@ -116,7 +128,7 @@ const VisualizerId = () => {
           <div className="brand">
             <Box className="logo" />
 
-            <span className="name">Roomify</span>
+            <span className="name">Archify</span>
           </div>
           <Button variant="ghost" size="sm" onClick={handleBack} className="exit">
             <X className="icon" /> Exit Editor
@@ -190,7 +202,7 @@ const VisualizerId = () => {
                         <ReactCompareSliderImage src={project?.sourceImage} alt="before" className="compare-img" />
                       }
                       itemTwo={
-                        <ReactCompareSliderImage src={currentImage || project?.renderedImage} alt="after" className="compare-img" />
+                        <ReactCompareSliderImage src={currentImage} alt="after" className="compare-img" />
                       }
                   />
               ) : (
